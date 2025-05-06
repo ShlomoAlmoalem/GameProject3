@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.Random;
 
 public class GamePanel extends JPanel implements KeyListener {
@@ -15,7 +16,8 @@ public class GamePanel extends JPanel implements KeyListener {
     int score = 0;
     int lives = 3;
     boolean running = true;
-
+    Image fullHeart;
+    Image emptyHert;
     public GamePanel() {
         setPreferredSize(new Dimension(600, 400));
         setBackground(Color.BLACK);
@@ -23,6 +25,8 @@ public class GamePanel extends JPanel implements KeyListener {
         addKeyListener(this);
         basket = new Basket(270, 350);
         objects = new ArrayList<>();
+        fullHeart=new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/fullHeart.png"))).getImage();
+        emptyHert=new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/emptyHeart.png"))).getImage();
     }
 
     public void startGameLoop() {
@@ -31,8 +35,8 @@ public class GamePanel extends JPanel implements KeyListener {
 
             while (running) {
                 // תנועה
-                if (left) basket.move(-15);
-                if (right) basket.move(15);
+                if (left) basket.move(-5);
+                if (right) basket.move(5);
 
                 // עדכון עצמים
                 for (FallingObject o : objects)
@@ -51,7 +55,7 @@ public class GamePanel extends JPanel implements KeyListener {
                         if (lives == 0) {
                             running = false;
                             SwingUtilities.invokeLater(() -> {
-                                JOptionPane.showMessageDialog(this, "Game Over!\nScore: " + score);
+//                                JOptionPane.showMessageDialog(this, "Game Over!\nScore: " + score);
                                 System.exit(0);
                             });
                         }
@@ -85,7 +89,15 @@ public class GamePanel extends JPanel implements KeyListener {
 
         g.setColor(Color.WHITE);
         g.drawString("Score: " + score, 10, 20);
-        g.drawString("Lives: " + lives, 10, 40);
+//        g.drawString("Lives: " + lives, 10, 40);
+        for (int i = 0; i <basket.getMaxHp() ; i++) {
+            if (lives>i){
+                g.drawImage(fullHeart,40*i,30,40,40,this);
+            }
+            else {
+                g.drawImage(emptyHert,40*i,30,40,40,this);
+            }
+        }
     }
 
     @Override
@@ -102,4 +114,3 @@ public class GamePanel extends JPanel implements KeyListener {
 
     @Override public void keyTyped(KeyEvent e) {}
 }
-
