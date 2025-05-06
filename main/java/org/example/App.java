@@ -12,6 +12,8 @@ public class App {
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
 
+
+
         panel.startGameLoop(); // הפעלת הלולאה
     }
 }
