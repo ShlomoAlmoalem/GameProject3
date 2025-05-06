@@ -3,7 +3,7 @@ import java.awt.*;
 
 public class FallingObject {
     int x, y, size = 20;
-    int speed = 6;
+    int speed = 3;
 
     public FallingObject(int x, int y) {
         this.x = x;
