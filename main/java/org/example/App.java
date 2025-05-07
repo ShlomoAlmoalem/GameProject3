@@ -8,7 +8,6 @@ public class App {
         JFrame frame = new JFrame("Falling Objects");
         GamePanel panel = new GamePanel();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
         frame.setResizable(false);
         frame.add(panel);
         frame.pack();
