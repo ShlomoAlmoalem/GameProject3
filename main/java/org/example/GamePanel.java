@@ -4,13 +4,15 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Objects;
 import java.util.Random;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class GamePanel extends JPanel implements KeyListener {
 
     Basket basket;
-    ArrayList<FallingObject> objects;
+    CopyOnWriteArrayList<FallingObject> objects;
     Random rand = new Random();
     boolean left, right;
     int score = 0;
@@ -18,15 +20,16 @@ public class GamePanel extends JPanel implements KeyListener {
     boolean running = true;
     Image fullHeart;
     Image emptyHert;
+
     public GamePanel() {
         setPreferredSize(new Dimension(600, 400));
         setBackground(Color.BLACK);
         setFocusable(true);
         addKeyListener(this);
         basket = new Basket(270, 350);
-        objects = new ArrayList<>();
-        fullHeart=new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/fullHeart.png"))).getImage();
-        emptyHert=new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/emptyHeart.png"))).getImage();
+        objects = new CopyOnWriteArrayList<>();
+        fullHeart = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/fullHeart.png"))).getImage();
+        emptyHert = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/emptyHeart.png"))).getImage();
     }
 
     public void startGameLoop() {
@@ -35,32 +38,35 @@ public class GamePanel extends JPanel implements KeyListener {
 
             while (running) {
                 // תנועה
-                if (left) basket.move(-5);
-                if (right) basket.move(5);
+                if (left) basket.move(-8);
+                if (right) basket.move(8);
 
                 // עדכון עצמים
                 for (FallingObject o : objects)
                     o.update();
 
                 // פגיעה בסל
-                Iterator<FallingObject> it = objects.iterator();
-                while (it.hasNext()) {
-                    FallingObject o = it.next();
-                    if (o.getBounds().intersects(basket.getBounds())) {
-                        it.remove();
+                List<FallingObject> objectsToRemove = new ArrayList<>();
+                for (FallingObject o : objects) {
+                    Rectangle basketBounds = basket.getBounds();
+                    Rectangle objectBounds = o.getBounds();
+
+                    if (objectBounds.intersects(basketBounds)) {
+                        objectsToRemove.add(o);
                         score++;
                     } else if (o.y > getHeight()) {
-                        it.remove();
+                        objectsToRemove.add(o);
                         lives--;
                         if (lives == 0) {
                             running = false;
                             SwingUtilities.invokeLater(() -> {
-//                                JOptionPane.showMessageDialog(this, "Game Over!\nScore: " + score);
+                                JOptionPane.showMessageDialog(this, "Game Over!\nScore: " + score);
                                 System.exit(0);
                             });
                         }
                     }
                 }
+                objects.removeAll(objectsToRemove);
 
                 // יצירת עצמים חדשים כל 1 שנייה
                 if (System.currentTimeMillis() - lastDrop > 1000) {
@@ -84,18 +90,16 @@ public class GamePanel extends JPanel implements KeyListener {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         basket.draw(g);
-        for (FallingObject o : objects)
+        for (FallingObject o : objects) {
             o.draw(g);
-
+        }
         g.setColor(Color.WHITE);
         g.drawString("Score: " + score, 10, 20);
-//        g.drawString("Lives: " + lives, 10, 40);
-        for (int i = 0; i <basket.getMaxHp() ; i++) {
-            if (lives>i){
-                g.drawImage(fullHeart,40*i,30,40,40,this);
-            }
-            else {
-                g.drawImage(emptyHert,40*i,30,40,40,this);
+        for (int i = 0; i < basket.getMaxHp(); i++) {
+            if (lives > i) {
+                g.drawImage(fullHeart, 40 * i, 30, 40, 40, this);
+            } else {
+                g.drawImage(emptyHert, 40 * i, 30, 40, 40, this);
             }
         }
     }
@@ -112,5 +116,7 @@ public class GamePanel extends JPanel implements KeyListener {
         if (e.getKeyCode() == KeyEvent.VK_RIGHT) right = false;
     }
 
-    @Override public void keyTyped(KeyEvent e) {}
+    @Override
+    public void keyTyped(KeyEvent e) {
+    }
 }
