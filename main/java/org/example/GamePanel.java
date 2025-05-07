@@ -20,7 +20,7 @@ public class GamePanel extends JPanel implements KeyListener {
     boolean running = true;
     Image fullHeart;
     Image emptyHert;
-
+    JLabel scoreLabel;
     public GamePanel() {
         setPreferredSize(new Dimension(600, 400));
         setBackground(Color.BLACK);
@@ -30,6 +30,12 @@ public class GamePanel extends JPanel implements KeyListener {
         objects = new CopyOnWriteArrayList<>();
         fullHeart = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/fullHeart.png"))).getImage();
         emptyHert = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/emptyHeart.png"))).getImage();
+        scoreLabel=new JLabel("Score: " +score);
+        scoreLabel.setFont(new Font("David",Font.PLAIN,24));
+        scoreLabel.setForeground(Color.PINK);
+        scoreLabel.setBounds(0,50,200,30);
+        this.add(scoreLabel);
+
     }
     public void startGameLoop() {
         Thread gameThread = new Thread(() -> {
@@ -92,8 +98,7 @@ public class GamePanel extends JPanel implements KeyListener {
         for (FallingObject o : objects) {
             o.draw(g);
         }
-        g.setColor(Color.WHITE);
-        g.drawString("Score: " + score, 10, 20);
+        g.setColor(Color.CYAN);
         for (int i = 0; i < basket.getMaxHp(); i++) {
             if (lives > i) {
                 g.drawImage(fullHeart, 40 * i, 30, 40, 40, this);
@@ -101,6 +106,8 @@ public class GamePanel extends JPanel implements KeyListener {
                 g.drawImage(emptyHert, 40 * i, 30, 40, 40, this);
             }
         }
+        scoreLabel.setText("Score: "+score);
+        this.repaint();
     }
 
     @Override
