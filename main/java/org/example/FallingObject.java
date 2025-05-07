@@ -4,8 +4,8 @@ import java.awt.*;
 import java.util.Random;
 
 public class FallingObject {
-    int x, y, size = 34;
-    int speed = 5;
+    int x, y, size = 42;
+    int speed = 8;
     Image images[];
     Image image;
 

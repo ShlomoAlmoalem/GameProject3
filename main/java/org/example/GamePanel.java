@@ -78,7 +78,7 @@ public class GamePanel extends JPanel implements KeyListener {
                 objects.removeAll(objectsToRemove);
 
                 // יצירת עצמים חדשים כל 1 שנייה
-                if (System.currentTimeMillis() - lastDrop > 1000) {
+                if (System.currentTimeMillis() - lastDrop > 100) {
                     objects.add(new FallingObject(rand.nextInt(570), 0));
                     lastDrop = System.currentTimeMillis();
                 }
