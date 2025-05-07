@@ -66,7 +66,6 @@ public class Basket {
         g.setColor(Color.GREEN);
         g.fillRect(x, y, width, height);
     }
-
     public Rectangle getBounds() {
         return new Rectangle(x, y, width, height);
     }

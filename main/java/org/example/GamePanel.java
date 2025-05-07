@@ -31,7 +31,6 @@ public class GamePanel extends JPanel implements KeyListener {
         fullHeart = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/fullHeart.png"))).getImage();
         emptyHert = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/emptyHeart.png"))).getImage();
     }
-
     public void startGameLoop() {
         Thread gameThread = new Thread(() -> {
             long lastDrop = System.currentTimeMillis();

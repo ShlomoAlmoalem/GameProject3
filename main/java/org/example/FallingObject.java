@@ -9,6 +9,7 @@ public class FallingObject {
     Image images[];
     Image image;
 
+
     public FallingObject(int x, int y) {
         Random rand = new Random();
         this.x = x;
