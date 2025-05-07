@@ -40,6 +40,8 @@ public class GamePanel extends JPanel implements KeyListener {
         scoreLabel.setBounds(0,50,200,30);
         this.add(scoreLabel);
 
+        SwingUtilities.invokeLater(this::requestFocusInWindow);
+
     }
     public void startGameLoop() {
         Thread gameThread = new Thread(() -> {
