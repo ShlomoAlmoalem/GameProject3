@@ -20,7 +20,10 @@ public class GamePanel extends JPanel implements KeyListener {
     boolean running = true;
     Image fullHeart;
     Image emptyHert;
+    Image backgroundImage;
     JLabel scoreLabel;
+
+
     public GamePanel() {
         setPreferredSize(new Dimension(600, 400));
         setBackground(Color.BLACK);
@@ -30,9 +33,10 @@ public class GamePanel extends JPanel implements KeyListener {
         objects = new CopyOnWriteArrayList<>();
         fullHeart = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/fullHeart.png"))).getImage();
         emptyHert = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/emptyHeart.png"))).getImage();
+        backgroundImage = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/bg.png"))).getImage(); // טעינת תמונת הרקע
         scoreLabel=new JLabel("Score: " +score);
         scoreLabel.setFont(new Font("David",Font.PLAIN,24));
-        scoreLabel.setForeground(Color.PINK);
+        scoreLabel.setForeground(Color.BLACK);
         scoreLabel.setBounds(0,50,200,30);
         this.add(scoreLabel);
 
@@ -94,6 +98,7 @@ public class GamePanel extends JPanel implements KeyListener {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
+        g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this); // ציור תמונת הרקע
         basket.draw(g);
         for (FallingObject o : objects) {
             o.draw(g);
