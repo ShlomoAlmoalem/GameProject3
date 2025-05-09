@@ -3,8 +3,8 @@ import java.awt.*;
 import javax.swing.ImageIcon;
 
 public class Basket {
-    int x, y, width = 100, height = 70;
-    int speed = 9;
+    int x, y, width = 125, height = 80;
+    int speed = 8;
     Image basketImage; // משתנה שיכיל את התמונה של הסל
 
     public Basket(int x, int y) {

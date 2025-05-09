@@ -40,7 +40,7 @@ public class Guide extends JPanel {
                 participates in a parent-child fruit picking competition
                 Help Shay collect as many fruits as possible
                 """);
-        instructions.setFont(new Font("Impact", Font.PLAIN, 22));
+        instructions.setFont(new Font("Impact", Font.BOLD, 22));
         instructions.setEditable(false);
         instructions.setBackground(new Color(240, 240, 240, 200));
         instructions.setMargin(new Insets(20, 20, 20, 20));
