@@ -5,7 +5,7 @@ import java.util.Random;
 
 public class FallingObject {
     int x, y, size = 42;
-    int speed = 8;
+    int speed = 7;
     Image images[];
     Image image;
 

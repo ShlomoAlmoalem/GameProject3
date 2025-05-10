@@ -97,7 +97,7 @@ public class GamePanel extends JPanel implements KeyListener {
                 objects.removeAll(objectsToRemove);
 // יצירת עצמים חדשים כל 1 שנייה
                 if (System.currentTimeMillis() - lastDrop > 700) {
-                    int randomValue = rand.nextInt(20); // הגדלתי את טווח האקראיות
+                    int randomValue = rand.nextInt(12); // הגדלתי את טווח האקראיות
                     if (randomValue == 0) { // סיכוי של 1 ל-20 ליצור פרי זהב
                         objects.add(new GoldenFruit(rand.nextInt(570), 0));
                     } else if (randomValue >= 1 && randomValue <= 2) { // סיכוי של 2 ל-20 (1 ל-10) ליצור פרי רקוב

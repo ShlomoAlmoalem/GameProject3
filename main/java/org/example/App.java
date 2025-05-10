@@ -12,10 +12,8 @@ public class App {
         frame.add(panel);
         frame.pack();
         frame.setLocationRelativeTo(null);
-
         MenuScreen menu = new MenuScreen(frame);
         frame.setContentPane(menu);
-        
         frame.setVisible(true);
     }
 }
