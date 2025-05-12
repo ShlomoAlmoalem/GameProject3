@@ -16,30 +16,14 @@ public class EndScreen extends JPanel {
         JPanel overlayPanel = new JPanel();
         overlayPanel.setOpaque(false);
         overlayPanel.setLayout(new BoxLayout(overlayPanel, BoxLayout.Y_AXIS));
-        overlayPanel.setBorder(BorderFactory.createEmptyBorder(60, 100, 60, 100));
-
-        // טקסט Game Over
-//        JLabel gameOver = new JLabel("GAME OVER", SwingConstants.CENTER);
-//        gameOver.setFont(new Font("Impact", Font.BOLD, 50));
-//        gameOver.setForeground(Color.RED);
-//        gameOver.setAlignmentX(Component.CENTER_ALIGNMENT);
-//        overlayPanel.add(gameOver);
-//
-//        // ניקוד סופי
-//        JLabel scoreLabel = new JLabel("Your Score: " + finalScore, SwingConstants.CENTER);
-//        scoreLabel.setFont(new Font("Arial", Font.PLAIN, 28));
-//        scoreLabel.setForeground(Color.WHITE);
-//        scoreLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-//        overlayPanel.add(Box.createRigidArea(new Dimension(0, 20)));
-//        overlayPanel.add(scoreLabel);
-//        overlayPanel.add(Box.createRigidArea(new Dimension(0, 40)));
+        overlayPanel.setBorder(BorderFactory.createEmptyBorder(100, 100, 60, 100));
 
         // כפתור שחק שוב
         java.net.URL playButtonIconUrl = getClass().getResource("/Images/EndReB.png");
         JButton ReStartButton;
         if (playButtonIconUrl != null) {
             ImageIcon playIcon = new ImageIcon(playButtonIconUrl);
-            Image scaledPlayImage = playIcon.getImage().getScaledInstance(180, 60, Image.SCALE_SMOOTH); // 200x60 פיקסלים
+            Image scaledPlayImage = playIcon.getImage().getScaledInstance(170, 60, Image.SCALE_SMOOTH); // 200x60 פיקסלים
             playIcon = new ImageIcon(scaledPlayImage);
             ReStartButton = new JButton(playIcon);
             ReStartButton.setBorderPainted(false);
@@ -58,7 +42,7 @@ public class EndScreen extends JPanel {
 
         if (backButtonIconUrl != null) {
             ImageIcon backIcon = new ImageIcon(backButtonIconUrl);
-            Image scaledBackImage = backIcon.getImage().getScaledInstance(180, 60, Image.SCALE_SMOOTH);
+            Image scaledBackImage = backIcon.getImage().getScaledInstance(160, 60, Image.SCALE_SMOOTH);
             backIcon = new ImageIcon(scaledBackImage);
             backButton = new JButton(backIcon);
             backButton.setBorderPainted(false);
@@ -77,7 +61,7 @@ public class EndScreen extends JPanel {
         JButton exitButton;
         if (exitButtonIconUrl != null) {
             ImageIcon exitIcon = new ImageIcon(exitButtonIconUrl);
-            Image scaledExitImage = exitIcon.getImage().getScaledInstance(180, 60, Image.SCALE_SMOOTH); // 200x60 פיקסלים
+            Image scaledExitImage = exitIcon.getImage().getScaledInstance(120, 60, Image.SCALE_SMOOTH); // 200x60 פיקסלים
             exitIcon = new ImageIcon(scaledExitImage);
             exitButton = new JButton(exitIcon);
             exitButton.setBorderPainted(false);

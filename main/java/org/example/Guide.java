@@ -10,11 +10,11 @@ public class Guide extends JPanel {
     public Guide(JFrame frame) {
         setLayout(new BorderLayout());
 
-        java.net.URL imageUrl = getClass().getResource("/Images/Guibg.png");
+        java.net.URL imageUrl = getClass().getResource("/Images/bg1.jpg");
         if (imageUrl != null) {
             backgroundImage = new ImageIcon(imageUrl).getImage();
         } else {
-            System.err.println("Background image not found! Check path: /Images/Guibg.png");
+            System.err.println("Background image not found! Check path: /Images/bg1.jpg");
         }
 
         // אזור ההוראות
@@ -26,7 +26,7 @@ public class Guide extends JPanel {
 
                 Fruits: Each fruit increases a point
 
-                Rotten fruits: Each rotten fruit decreases a heart
+                Rotten fruits: Each rotten fruit decreases a heart and 5 points
 
                 Golden apple: Each golden apple restores a heart
 

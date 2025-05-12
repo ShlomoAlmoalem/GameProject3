@@ -1,162 +1,240 @@
 package org.example;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.io.*;
+import java.util.*;
 import java.util.List;
-import java.util.Objects;
-import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
-
 
 public class GamePanel extends JPanel implements KeyListener {
 
-    Basket basket;
-    CopyOnWriteArrayList<FallingObject> objects;
-    Random rand = new Random();
-    boolean left, right;
-    int score = 0;
-    int lives = 3;
-    boolean running = true;
-    Image fullHeart;
-    Image emptyHert;
-    Image backgroundImage;
-    JLabel scoreLabel;
+    private static final int PANEL_WIDTH = 600;
+    private static final int PANEL_HEIGHT = 400;
+    private static final int MAX_LIVES = 3;
 
+    private final Basket basket;
+    private final CopyOnWriteArrayList<FallingObject> objects = new CopyOnWriteArrayList<>();
+    private final Random rand = new Random();
+
+    private boolean leftKeyPressed = false;
+    private boolean rightKeyPressed = false;
+    private int score = 0;
+    private int lives = MAX_LIVES;
+    int highScore = 0;
+    private boolean running = true;
+
+    private final Image fullHeart;
+    private final Image emptyHeart;
+    private final Image backgroundImage;
+    private final JLabel scoreLabel;
+    JLabel highScoreLabel;
+    File highScoreFile = new File("highscore.txt");
 
     public GamePanel() {
-        setPreferredSize(new Dimension(600, 400));
-        setBackground(Color.BLACK);
+        setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
         setFocusable(true);
+        setLayout(null);
         addKeyListener(this);
-        basket = new Basket(270, 350);
-        objects = new CopyOnWriteArrayList<>();
+
+        basket = new Basket(200, 100);
         fullHeart = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/fullHeart.png"))).getImage();
-        emptyHert = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/emptyHeart.png"))).getImage();
-        backgroundImage = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/bg.png"))).getImage(); // טעינת תמונת הרקע
-        scoreLabel=new JLabel("Score: " +score);
-        scoreLabel.setFont(new Font("Impact",Font.PLAIN,24));
+        emptyHeart = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/emptyHeart.png"))).getImage();
+        backgroundImage = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/bg.png"))).getImage();
+
+        scoreLabel = new JLabel("Score: " + score);
+        scoreLabel.setFont(new Font("Impact", Font.PLAIN, 24));
         scoreLabel.setForeground(Color.BLACK);
-        scoreLabel.setBounds(0,50,200,30);
+        scoreLabel.setBounds(10, 5, 200, 30);
         this.add(scoreLabel);
 
-        SwingUtilities.invokeLater(this::requestFocusInWindow);
+        highScoreLabel = new JLabel("High Score: " + highScore);
+        highScoreLabel.setFont(new Font("Impact", Font.PLAIN, 24));
+        highScoreLabel.setForeground(Color.BLACK);
+        highScoreLabel.setBounds(450, 5, 200, 30);
+        this.add(highScoreLabel);
 
+        loadHighScore();
+        highScoreLabel.setText("High Score: " + highScore);
+
+        SwingUtilities.invokeLater(this::requestFocusInWindow);
     }
+
     public void startGameLoop() {
         Thread gameThread = new Thread(() -> {
             long lastDrop = System.currentTimeMillis();
 
             while (running) {
-                // תנועה
-                if (left) basket.move(-9);
-                if (right) basket.move(9);
+                handleInput();
+                basket.update();
 
-                // עדכון עצמים
-                for (FallingObject o : objects)
-                    o.update();
-
-                // פגיעה בסל
-                List<FallingObject> objectsToRemove = new ArrayList<>();
                 for (FallingObject o : objects) {
-                    Rectangle basketBounds = basket.getBounds();
-                    Rectangle objectBounds = o.getBounds();
-
-                    if (objectBounds.intersects(basketBounds)) {
-                        objectsToRemove.add(o);
-                        if (o instanceof GoldenFruit) {
-                            lives = Math.min(lives + 1, 3);
-                        } else if (o instanceof RottenFruit) {
-                            score = Math.max(0, score - 5); // מוריד 5 נקודות, מינימום 0
-                            lives--;
-                            if (lives == 0) {
-                                running = false;
-                                SwingUtilities.invokeLater(() -> {
-                                    JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
-                                    topFrame.setContentPane(new EndScreen(topFrame, score));
-                                    topFrame.revalidate();
-                                    topFrame.repaint();
-                                });
-                            }
-                        } else {
-                            score++;
-                        }
-                    } else if (o.y > getHeight()) {
-                        objectsToRemove.add(o);
-                        // בודקים אם זה לא פרי זהב או רקוב ואז מורידים חיים
-                        if (!(o instanceof GoldenFruit) && !(o instanceof RottenFruit)) {
-                            lives--;
-                            if (lives == 0) {
-                                running = false;
-                                SwingUtilities.invokeLater(() -> {
-                                    JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
-                                    topFrame.setContentPane(new EndScreen(topFrame, score));
-                                    topFrame.revalidate();
-                                    topFrame.repaint();
-                                    });
-                            }
-                        }
-                    }
+                    o.update();
                 }
-                objects.removeAll(objectsToRemove);
-// יצירת עצמים חדשים כל 1 שנייה
+
+                checkCollisions();
+
                 if (System.currentTimeMillis() - lastDrop > 700) {
-                    int randomValue = rand.nextInt(12); // הגדלתי את טווח האקראיות
-                    if (randomValue == 0) { // סיכוי של 1 ל-20 ליצור פרי זהב
-                        objects.add(new GoldenFruit(rand.nextInt(570), 0));
-                    } else if (randomValue >= 1 && randomValue <= 2) { // סיכוי של 2 ל-20 (1 ל-10) ליצור פרי רקוב
-                        objects.add(new RottenFruit(rand.nextInt(570), 0));
-                    } else {
-                        objects.add(new FallingObject(rand.nextInt(570), 0));
-                    }
+                    spawnObject();
                     lastDrop = System.currentTimeMillis();
                 }
+
                 repaint();
 
                 try {
-                    Thread.sleep(16); // כ-60 FPS
+                    Thread.sleep(16); // ~60 FPS
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
         });
+
         gameThread.start();
+    }
+
+    private void handleInput() {
+        if (leftKeyPressed) {
+            basket.currentDirection = "left";
+            basket.move(-9);
+        } else if (rightKeyPressed) {
+            basket.currentDirection = "right";
+            basket.move(9);
+        } else {
+            basket.currentDirection = "";
+        }
+    }
+
+    private void checkCollisions() {
+        List<FallingObject> toRemove = new ArrayList<>();
+
+        for (FallingObject o : objects) {
+            Rectangle basketBounds = basket.getBounds();
+            Rectangle objectBounds = o.getBounds();
+
+            if (objectBounds.intersects(basketBounds)) {
+                toRemove.add(o);
+                handleCaughtObject(o);
+            } else if (o.y > getHeight()) {
+                toRemove.add(o);
+                handleMissedObject(o);
+            }
+        }
+
+        objects.removeAll(toRemove);
+    }
+
+    private void handleCaughtObject(FallingObject o) {
+        if (o instanceof GoldenFruit) {
+            lives = Math.min(lives + 1, MAX_LIVES);
+        } else if (o instanceof RottenFruit) {
+            score = Math.max(0, score - 5);
+            loseLife();
+        } else {
+            score++;
+        }
+    }
+
+    private void handleMissedObject(FallingObject o) {
+        if (!(o instanceof GoldenFruit) && !(o instanceof RottenFruit)) {
+            loseLife();
+        }
+    }
+
+    private void loseLife() {
+        lives--;
+        if (lives == 0) {
+            running = false;
+            SwingUtilities.invokeLater(this::showEndScreen);
+        }
+    }
+
+    private void showEndScreen() {
+        if (score > highScore) {
+            highScore = score;
+            saveHighScore();
+        }
+
+        JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
+        topFrame.setContentPane(new EndScreen(topFrame, score));
+        topFrame.revalidate();
+        topFrame.repaint();
+    }
+
+    private void spawnObject() {
+        int x = rand.nextInt(PANEL_WIDTH - 30);
+        int r = rand.nextInt(20);
+
+        if (r == 0) {
+            objects.add(new GoldenFruit(x, 0));
+        } else if (r <= 2) {
+            objects.add(new RottenFruit(x, 0));
+        } else {
+            objects.add(new FallingObject(x, 0));
+        }
     }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this); // ציור תמונת הרקע
+        g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
         basket.draw(g);
         for (FallingObject o : objects) {
             o.draw(g);
         }
-        g.setColor(Color.CYAN);
-        for (int i = 0; i < basket.getMaxHp(); i++) {
-            if (lives > i) {
-                g.drawImage(fullHeart, 40 * i, 30, 40, 40, this);
-            } else {
-                g.drawImage(emptyHert, 40 * i, 30, 40, 40, this);
-            }
+
+        for (int i = 0; i < MAX_LIVES; i++) {
+            Image heart = (lives > i) ? fullHeart : emptyHeart;
+            g.drawImage(heart, 40 * i, 30, 40, 40, this);
         }
-        scoreLabel.setText("Score: "+score);
-        this.repaint();
+
+        scoreLabel.setText("Score: " + score);
+        highScoreLabel.setText("High Score: " + highScore);
     }
 
     @Override
     public void keyPressed(KeyEvent e) {
-        if (e.getKeyCode() == KeyEvent.VK_LEFT) left = true;
-        if (e.getKeyCode() == KeyEvent.VK_RIGHT) right = true;
+        if (e.getKeyCode() == KeyEvent.VK_LEFT) leftKeyPressed = true;
+        if (e.getKeyCode() == KeyEvent.VK_RIGHT) rightKeyPressed = true;
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-        if (e.getKeyCode() == KeyEvent.VK_LEFT) left = false;
-        if (e.getKeyCode() == KeyEvent.VK_RIGHT) right = false;
+        if (e.getKeyCode() == KeyEvent.VK_LEFT) leftKeyPressed = false;
+        if (e.getKeyCode() == KeyEvent.VK_RIGHT) rightKeyPressed = false;
     }
 
     @Override
     public void keyTyped(KeyEvent e) {
+        // לא בשימוש
+    }
+
+    private void loadHighScore() {
+        try {
+            if (highScoreFile.exists()) {
+                Scanner scanner = new Scanner(highScoreFile);
+                if (scanner.hasNextInt()) {
+                    highScore = scanner.nextInt();
+                }
+                scanner.close();
+            } else {
+                highScoreFile.createNewFile();
+                FileWriter writer = new FileWriter(highScoreFile);
+                writer.write("0");
+                writer.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void saveHighScore() {
+        try {
+            FileWriter writer = new FileWriter(highScoreFile);
+            writer.write(String.valueOf(highScore));
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
