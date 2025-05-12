@@ -20,7 +20,7 @@ public class Guide extends JPanel {
         // אזור ההוראות
         JTextArea instructions = new JTextArea();
         instructions.setText("""
-                BASKET GAME - GUIDE
+                FruitBasket - GUIDE
 
                 Game objective: Collect as many fruits as possible with the basket
 

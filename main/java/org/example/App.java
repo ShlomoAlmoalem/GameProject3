@@ -6,7 +6,7 @@ import java.util.Objects;
 public class App {
     public static void main(String[] args) {
 
-        JFrame frame = new JFrame("Falling Objects");
+        JFrame frame = new JFrame("FruitBasket");
         GamePanel panel = new GamePanel();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);

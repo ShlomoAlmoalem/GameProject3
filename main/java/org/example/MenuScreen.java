@@ -16,7 +16,7 @@ public class MenuScreen extends JPanel {
         overlayPanel.setLayout(new BoxLayout(overlayPanel, BoxLayout.Y_AXIS));
         overlayPanel.setBorder(BorderFactory.createEmptyBorder(60, 100, 60, 100));
 
-        JLabel title = new JLabel("BASKET GAME", SwingConstants.CENTER);
+        JLabel title = new JLabel("FruitBasket", SwingConstants.CENTER);
         title.setFont(new Font("Impact", Font.BOLD, 50));
         title.setForeground(Color.BLACK);
         title.setAlignmentX(Component.CENTER_ALIGNMENT);

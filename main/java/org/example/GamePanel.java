@@ -72,8 +72,10 @@ public class GamePanel extends JPanel implements KeyListener {
                             if (lives == 0) {
                                 running = false;
                                 SwingUtilities.invokeLater(() -> {
-                                    JOptionPane.showMessageDialog(this, "Game Over!\nScore: " + score);
-                                    System.exit(0);
+                                    JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
+                                    topFrame.setContentPane(new EndScreen(topFrame, score));
+                                    topFrame.revalidate();
+                                    topFrame.repaint();
                                 });
                             }
                         } else {
@@ -87,9 +89,11 @@ public class GamePanel extends JPanel implements KeyListener {
                             if (lives == 0) {
                                 running = false;
                                 SwingUtilities.invokeLater(() -> {
-                                    JOptionPane.showMessageDialog(this, "Game Over!\nScore: " + score);
-                                    System.exit(0);
-                                });
+                                    JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
+                                    topFrame.setContentPane(new EndScreen(topFrame, score));
+                                    topFrame.revalidate();
+                                    topFrame.repaint();
+                                    });
                             }
                         }
                     }
