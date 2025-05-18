@@ -1,14 +1,22 @@
 package org.example;
 
+import javax.sound.sampled.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
+import java.net.URL;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class GamePanel extends JPanel implements KeyListener {
+
+    private Sound soundScene;
+    private Sound rottenSound;
+    private Sound goldenAppleSound; // סאונד עבור תפוח זהב
+    private Sound takingObjectSound; // סאונד עבור פרי רגיל
+    private boolean gameSoundStarted = false; // משתנה לבדיקה האם סאונד המשחק התחיל
 
     private static final int PANEL_WIDTH = 600;
     private static final int PANEL_HEIGHT = 400;
@@ -38,6 +46,15 @@ public class GamePanel extends JPanel implements KeyListener {
         setLayout(null);
         addKeyListener(this);
 
+        this.rottenSound = new Sound();
+        this.rottenSound.playSound("main/resources/sounds/rottenFruit.wav");
+
+        this.goldenAppleSound = new Sound(); // יצירת אובייקט סאונד עבור תפוח זהב
+        this.goldenAppleSound.playSound("main/resources/sounds/GoldenApplesound.wav"); // טעינת הסאונד
+
+        this.takingObjectSound = new Sound(); // יצירת אובייקט סאונד עבור פרי רגיל
+        this.takingObjectSound.playSound("main/resources/sounds/TakingObjects.wav"); // טעינת הסאונד
+
         basket = new Basket(200, 100);
         fullHeart = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/fullHeart.png"))).getImage();
         emptyHeart = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/emptyHeart.png"))).getImage();
@@ -62,6 +79,13 @@ public class GamePanel extends JPanel implements KeyListener {
     }
 
     public void startGameLoop() {
+        if (!gameSoundStarted) {
+            this.soundScene = new Sound();
+            this.soundScene.playSound("main/resources/sounds/GPmusic.wav");
+            this.soundScene.startBackgroundPlay();
+            this.soundScene.loopPlay();
+            gameSoundStarted = true;
+        }
         Thread gameThread = new Thread(() -> {
             long lastDrop = System.currentTimeMillis();
 
@@ -88,9 +112,18 @@ public class GamePanel extends JPanel implements KeyListener {
                     e.printStackTrace();
                 }
             }
+            // עצור את סאונד המשחק כשהמשחק נגמר
+            stopGameSound();
         });
 
         gameThread.start();
+    }
+
+    public void stopGameSound() {
+        if (soundScene != null && gameSoundStarted) {
+            soundScene.stopPlay();
+            gameSoundStarted = false;
+        }
     }
 
     private void handleInput() {
@@ -115,6 +148,7 @@ public class GamePanel extends JPanel implements KeyListener {
             if (objectBounds.intersects(basketBounds)) {
                 toRemove.add(o);
                 handleCaughtObject(o);
+
             } else if (o.y > getHeight()) {
                 toRemove.add(o);
                 handleMissedObject(o);
@@ -127,11 +161,18 @@ public class GamePanel extends JPanel implements KeyListener {
     private void handleCaughtObject(FallingObject o) {
         if (o instanceof GoldenFruit) {
             lives = Math.min(lives + 1, MAX_LIVES);
+            this.goldenAppleSound.startPlay(); // הפעלת סאונד עבור תפוח זהב
         } else if (o instanceof RottenFruit) {
+            lives--;
             score = Math.max(0, score - 5);
-            loseLife();
-        } else {
+            this.rottenSound.startPlay();
+            if (lives <= 0) {
+                running = false;
+                SwingUtilities.invokeLater(this::showEndScreen);
+            }
+        } else if (o instanceof FallingObject) { // אם זה פרי רגיל (לא תפוח זהב ולא רקוב)
             score++;
+            this.takingObjectSound.startPlay(); // הפעלת סאונד עבור פרי רגיל
         }
     }
 

@@ -4,8 +4,15 @@ import javax.swing.*;
 import java.awt.*;
 
 public class MenuScreen extends JPanel {
+
+    private Sound soundScene;
+
+
     public MenuScreen(JFrame frame) {
         setLayout(new BorderLayout());
+
+        this.soundScene = new Sound();
+        this.soundScene.playSound("main/resources/sounds/GMmusic.wav"); // שינוי שם הקובץ
 
         JLabel background = new JLabel(new ImageIcon(getClass().getResource("/Images/MBg.jpg")));
         background.setLayout(new BorderLayout());
@@ -80,6 +87,7 @@ public class MenuScreen extends JPanel {
             frame.setContentPane(gamePanel);
             frame.revalidate();
             frame.repaint();
+            soundScene.stopPlay(); // עצירת מוזיקת התפריט
             gamePanel.startGameLoop();
         });
 
@@ -87,8 +95,25 @@ public class MenuScreen extends JPanel {
             frame.setContentPane(new Guide(frame));
             frame.revalidate();
             frame.repaint();
+            soundScene.stopPlay(); // עצירת מוזיקת התפריט
         });
 
-        exitButton.addActionListener(e -> System.exit(0));
+        exitButton.addActionListener(e -> {
+            soundScene.stopPlay(); // עצירת מוזיקת התפריט (למרות שהתוכנית נסגרת)
+            System.exit(0);
+        });
+
+        sceneGame();
+    }
+
+    public void sceneGame() {
+
+        new Thread(()-> {
+
+            this.soundScene.startBackgroundPlay();
+            this.soundScene.loopPlay(); // הפעלת לולאה למוזיקת התפריט
+
+        }).start();
+
     }
 }

@@ -1,9 +1,7 @@
 package org.example;
-
 import javax.swing.ImageIcon;
 import java.util.Objects;
 import java.util.Random;
-
 public class RottenFruit extends FallingObject {
 
     private String type; // סוג הפרי הרקוב (בננה או תפוח)
