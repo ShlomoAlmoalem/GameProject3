@@ -73,6 +73,7 @@ public class Guide extends JPanel {
             frame.setContentPane(new MenuScreen(frame));
             frame.revalidate();
             frame.repaint();
+
         });
 
         JPanel buttonPanel = new JPanel();

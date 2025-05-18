@@ -53,7 +53,7 @@ public class GamePanel extends JPanel implements KeyListener {
         this.goldenAppleSound.playSound("main/resources/sounds/GoldenApplesound.wav"); // טעינת הסאונד
 
         this.takingObjectSound = new Sound(); // יצירת אובייקט סאונד עבור פרי רגיל
-        this.takingObjectSound.playSound("main/resources/sounds/TakingObjects.wav"); // טעינת הסאונד
+        this.takingObjectSound.playSound("main/resources/sounds/TakinkObject.wav"); // טעינת הסאונד
 
         basket = new Basket(200, 100);
         fullHeart = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/fullHeart.png"))).getImage();
@@ -69,7 +69,7 @@ public class GamePanel extends JPanel implements KeyListener {
         highScoreLabel = new JLabel("High Score: " + highScore);
         highScoreLabel.setFont(new Font("Impact", Font.PLAIN, 24));
         highScoreLabel.setForeground(Color.BLACK);
-        highScoreLabel.setBounds(450, 5, 200, 30);
+        highScoreLabel.setBounds(400, 5, 200, 30);
         this.add(highScoreLabel);
 
         loadHighScore();

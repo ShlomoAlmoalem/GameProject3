@@ -95,7 +95,7 @@ public class MenuScreen extends JPanel {
             frame.setContentPane(new Guide(frame));
             frame.revalidate();
             frame.repaint();
-            soundScene.stopPlay(); // עצירת מוזיקת התפריט
+            soundScene.stopPlay();
         });
 
         exitButton.addActionListener(e -> {
