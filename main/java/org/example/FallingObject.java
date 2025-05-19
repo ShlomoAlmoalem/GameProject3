@@ -13,9 +13,6 @@ public class FallingObject {
 
 
     public FallingObject(int x, int y) {
-//        this.fallSound = new Sound();
-//        this.fallSound.playSound("נתיב שורק");
-
         Random rand = new Random();
         this.x = x;
         this.y = y;
@@ -26,7 +23,6 @@ public class FallingObject {
 
     public void update() {
         y += speed;
-//        this.fallSound.startPlay();
     }
 
     public void draw(Graphics g) {

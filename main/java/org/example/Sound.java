@@ -14,7 +14,7 @@ public class Sound {
 
     public void playSound(String source) {
         try {
-            // ציין כאן את הנתיב המלא לקובץ הסאונד
+
             File soundFile = new File(source);
             audioInputStream = AudioSystem.getAudioInputStream(soundFile);
 

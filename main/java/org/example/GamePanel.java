@@ -14,9 +14,9 @@ public class GamePanel extends JPanel implements KeyListener {
 
     private Sound soundScene;
     private Sound rottenSound;
-    private Sound goldenAppleSound; // סאונד עבור תפוח זהב
-    private Sound takingObjectSound; // סאונד עבור פרי רגיל
-    private boolean gameSoundStarted = false; // משתנה לבדיקה האם סאונד המשחק התחיל
+    private Sound goldenAppleSound;
+    private Sound takingObjectSound;
+    private boolean gameSoundStarted = false;
 
     private static final int PANEL_WIDTH = 600;
     private static final int PANEL_HEIGHT = 400;
@@ -49,11 +49,11 @@ public class GamePanel extends JPanel implements KeyListener {
         this.rottenSound = new Sound();
         this.rottenSound.playSound("main/resources/sounds/rottenFruit.wav");
 
-        this.goldenAppleSound = new Sound(); // יצירת אובייקט סאונד עבור תפוח זהב
-        this.goldenAppleSound.playSound("main/resources/sounds/GoldenApplesound.wav"); // טעינת הסאונד
+        this.goldenAppleSound = new Sound();
+        this.goldenAppleSound.playSound("main/resources/sounds/GoldenApplesound.wav");
 
-        this.takingObjectSound = new Sound(); // יצירת אובייקט סאונד עבור פרי רגיל
-        this.takingObjectSound.playSound("main/resources/sounds/TakinkObject.wav"); // טעינת הסאונד
+        this.takingObjectSound = new Sound();
+        this.takingObjectSound.playSound("main/resources/sounds/TakinkObject.wav");
 
         basket = new Basket(200, 100);
         fullHeart = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/fullHeart.png"))).getImage();
@@ -107,18 +107,16 @@ public class GamePanel extends JPanel implements KeyListener {
                 repaint();
 
                 try {
-                    Thread.sleep(16); // ~60 FPS
+                    Thread.sleep(16);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
-            // עצור את סאונד המשחק כשהמשחק נגמר
             stopGameSound();
         });
 
         gameThread.start();
     }
-
     public void stopGameSound() {
         if (soundScene != null && gameSoundStarted) {
             soundScene.stopPlay();
@@ -161,18 +159,18 @@ public class GamePanel extends JPanel implements KeyListener {
     private void handleCaughtObject(FallingObject o) {
         if (o instanceof GoldenFruit) {
             lives = Math.min(lives + 1, MAX_LIVES);
-            this.goldenAppleSound.startPlay(); // הפעלת סאונד עבור תפוח זהב
+            this.goldenAppleSound.startPlay();
         } else if (o instanceof RottenFruit) {
             lives--;
-            score = Math.max(0, score - 5);
+            score = Math.max(0, score - 3);
             this.rottenSound.startPlay();
             if (lives <= 0) {
                 running = false;
                 SwingUtilities.invokeLater(this::showEndScreen);
             }
-        } else if (o instanceof FallingObject) { // אם זה פרי רגיל (לא תפוח זהב ולא רקוב)
+        } else if (o instanceof FallingObject) {
             score++;
-            this.takingObjectSound.startPlay(); // הפעלת סאונד עבור פרי רגיל
+            this.takingObjectSound.startPlay();
         }
     }
 
@@ -247,7 +245,7 @@ public class GamePanel extends JPanel implements KeyListener {
 
     @Override
     public void keyTyped(KeyEvent e) {
-        // לא בשימוש
+
     }
 
     private void loadHighScore() {
@@ -268,7 +266,6 @@ public class GamePanel extends JPanel implements KeyListener {
             e.printStackTrace();
         }
     }
-
     private void saveHighScore() {
         try {
             FileWriter writer = new FileWriter(highScoreFile);

@@ -5,27 +5,27 @@ import java.awt.*;
 
 public class EndScreen extends JPanel {
 
-    private Sound endScreenSound; // הוספת משתנה סאונד
+    private Sound endScreenSound;
 
     public EndScreen(JFrame frame, int finalScore) {
         setLayout(new BorderLayout());
 
-        // רקע
+
         JLabel background = new JLabel(new ImageIcon(getClass().getResource("/Images/EndBg.jpg")));
         background.setLayout(new BorderLayout());
         add(background);
 
-        // יצירת אובייקט סאונד וטעינת המוזיקה
-        this.endScreenSound = new Sound();
-        this.endScreenSound.playSound("main/resources/sounds/GOmusic.wav"); // הנחתי ששם הקובץ הוא GOmusic.wav
 
-        // לוח כפתורים
+        this.endScreenSound = new Sound();
+        this.endScreenSound.playSound("main/resources/sounds/GOmusic.wav");
+
+
         JPanel overlayPanel = new JPanel();
         overlayPanel.setOpaque(false);
         overlayPanel.setLayout(new BoxLayout(overlayPanel, BoxLayout.Y_AXIS));
         overlayPanel.setBorder(BorderFactory.createEmptyBorder(100, 100, 60, 100));
 
-        // כפתור שחק שוב
+
         java.net.URL playButtonIconUrl = getClass().getResource("/Images/EndReB.png");
         JButton ReStartButton;
         if (playButtonIconUrl != null) {
@@ -43,7 +43,7 @@ public class EndScreen extends JPanel {
         overlayPanel.add(ReStartButton);
         overlayPanel.add(Box.createRigidArea(new Dimension(0, 20)));
 
-        // כפתור חזור לתפריט
+
         JButton backButton;
         java.net.URL backButtonIconUrl = getClass().getResource("/Images/EndBTMB.png");
 
@@ -82,9 +82,9 @@ public class EndScreen extends JPanel {
 
         background.add(overlayPanel, BorderLayout.CENTER);
 
-        // פעולות כפתורים
+
         ReStartButton.addActionListener(e -> {
-            // עצור את מוזיקת מסך הסיום
+
             if (endScreenSound != null) {
                 endScreenSound.stopPlay();
             }
@@ -96,11 +96,11 @@ public class EndScreen extends JPanel {
         });
 
         backButton.addActionListener(e -> {
-            // עצור את מוזיקת מסך הסיום
+
             if (endScreenSound != null) {
                 endScreenSound.stopPlay();
             }
-            // עצור את סאונד המשחק אם הוא מתנגן
+
             Component[] components = frame.getContentPane().getComponents();
             for (Component component : components) {
                 if (component instanceof GamePanel) {
@@ -114,14 +114,14 @@ public class EndScreen extends JPanel {
         });
 
         exitButton.addActionListener(e -> {
-            // עצור את מוזיקת מסך הסיום
+
             if (endScreenSound != null) {
                 endScreenSound.stopPlay();
             }
             System.exit(0);
         });
 
-        // התחל לנגן את מוזיקת הרקע בלופ
+
         new Thread(() -> {
             if (endScreenSound != null) {
                 endScreenSound.startBackgroundPlay();

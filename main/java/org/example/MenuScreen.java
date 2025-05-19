@@ -1,5 +1,4 @@
 package org.example;
-
 import javax.swing.*;
 import java.awt.*;
 
@@ -7,12 +6,11 @@ public class MenuScreen extends JPanel {
 
     private Sound soundScene;
 
-
     public MenuScreen(JFrame frame) {
         setLayout(new BorderLayout());
 
         this.soundScene = new Sound();
-        this.soundScene.playSound("main/resources/sounds/GMmusic.wav"); // שינוי שם הקובץ
+        this.soundScene.playSound("main/resources/sounds/GMmusic.wav");
 
         JLabel background = new JLabel(new ImageIcon(getClass().getResource("/Images/MBg.jpg")));
         background.setLayout(new BorderLayout());
@@ -34,7 +32,7 @@ public class MenuScreen extends JPanel {
         JButton startButton;
         if (playButtonIconUrl != null) {
             ImageIcon playIcon = new ImageIcon(playButtonIconUrl);
-            Image scaledPlayImage = playIcon.getImage().getScaledInstance(150, 45, Image.SCALE_SMOOTH); // 200x60 פיקסלים
+            Image scaledPlayImage = playIcon.getImage().getScaledInstance(150, 45, Image.SCALE_SMOOTH);
             playIcon = new ImageIcon(scaledPlayImage);
             startButton = new JButton(playIcon);
             startButton.setBorderPainted(false);
@@ -51,7 +49,7 @@ public class MenuScreen extends JPanel {
         JButton GuiButton;
         if (guideButtonIconUrl != null) {
             ImageIcon guideIcon = new ImageIcon(guideButtonIconUrl);
-            Image scaledGuideImage = guideIcon.getImage().getScaledInstance(150, 45, Image.SCALE_SMOOTH); // 200x60 פיקסלים
+            Image scaledGuideImage = guideIcon.getImage().getScaledInstance(150, 45, Image.SCALE_SMOOTH);
             guideIcon = new ImageIcon(scaledGuideImage);
             GuiButton = new JButton(guideIcon);
             GuiButton.setBorderPainted(false);
@@ -68,7 +66,7 @@ public class MenuScreen extends JPanel {
         JButton exitButton;
         if (exitButtonIconUrl != null) {
             ImageIcon exitIcon = new ImageIcon(exitButtonIconUrl);
-            Image scaledExitImage = exitIcon.getImage().getScaledInstance(150, 45, Image.SCALE_SMOOTH); // 200x60 פיקסלים
+            Image scaledExitImage = exitIcon.getImage().getScaledInstance(150, 45, Image.SCALE_SMOOTH);
             exitIcon = new ImageIcon(scaledExitImage);
             exitButton = new JButton(exitIcon);
             exitButton.setBorderPainted(false);
@@ -87,7 +85,7 @@ public class MenuScreen extends JPanel {
             frame.setContentPane(gamePanel);
             frame.revalidate();
             frame.repaint();
-            soundScene.stopPlay(); // עצירת מוזיקת התפריט
+            soundScene.stopPlay();
             gamePanel.startGameLoop();
         });
 
@@ -99,7 +97,7 @@ public class MenuScreen extends JPanel {
         });
 
         exitButton.addActionListener(e -> {
-            soundScene.stopPlay(); // עצירת מוזיקת התפריט (למרות שהתוכנית נסגרת)
+            soundScene.stopPlay();
             System.exit(0);
         });
 
@@ -111,7 +109,7 @@ public class MenuScreen extends JPanel {
         new Thread(()-> {
 
             this.soundScene.startBackgroundPlay();
-            this.soundScene.loopPlay(); // הפעלת לולאה למוזיקת התפריט
+            this.soundScene.loopPlay();
 
         }).start();
 

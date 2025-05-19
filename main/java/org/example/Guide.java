@@ -17,7 +17,6 @@ public class Guide extends JPanel {
             System.err.println("Background image not found! Check path: /Images/bg1.jpg");
         }
 
-        // אזור ההוראות
         JTextArea instructions = new JTextArea();
         instructions.setText("""
                 FruitBasket - GUIDE

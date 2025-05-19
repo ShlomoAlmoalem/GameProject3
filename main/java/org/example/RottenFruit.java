@@ -4,18 +4,17 @@ import java.util.Objects;
 import java.util.Random;
 public class RottenFruit extends FallingObject {
 
-    private String type; // סוג הפרי הרקוב (בננה או תפוח)
+    private String type;
 
     public RottenFruit(int x, int y) {
         super(x, y);
         Random rand = new Random();
-        // בחירה אקראית בין בננה רקובה לתפוח רקוב
         if (rand.nextBoolean()) {
             type = "banana";
-            loadImage("rottenBanana.png"); // הנחתי ששם התמונה הוא rottenBanana.png
+            loadImage("rottenBanana.png");
         } else {
             type = "apple";
-            loadImage("rottenApple.png"); // הנחתי ששם התמונה הוא rottenApple.png
+            loadImage("rottenApple.png");
         }
     }
 

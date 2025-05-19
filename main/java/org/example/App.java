@@ -11,9 +11,9 @@ public class App {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);
         frame.add(panel);
-        // טען את תמונת הבאנר
+
         Image gameIcon = new ImageIcon(Objects.requireNonNull(App.class.getResource("/images/game_banner.png"))).getImage();
-        // הגדר את האייקון של הפריים
+
         frame.setIconImage(gameIcon);
         frame.pack();
         frame.setLocationRelativeTo(null);
